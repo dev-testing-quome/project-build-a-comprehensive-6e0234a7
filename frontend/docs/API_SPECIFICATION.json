@@ -1,0 +1,198 @@
+```json
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project Build a Comprehensive Legal Case Management System",
+    "version": "v1",
+    "description": "A comprehensive legal case management system API."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check endpoint",
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
+        "summary": "Login and obtain JWT token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/v1/clients": {
+      "get": {
+        "summary": "Get all clients",
+        "responses": {
+          "200": {
+            "description": "List of clients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Client" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Client" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Client created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Client" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/clients/{client_id}": {
+      "get": {
+        "summary": "Get a client by ID",
+        "parameters": [
+          { "in": "path", "name": "client_id", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Client" }
+              }
+            }
+          },
+          "404": { "description": "Client not found" }
+        }
+      },
+      "put": {
+        "summary": "Update a client",
+        "parameters": [
+          { "in": "path", "name": "client_id", "schema": { "type": "integer" }, "required": true }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Client" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Client" }
+              }
+            }
+          },
+          "404": { "description": "Client not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a client",
+        "parameters": [
+          { "in": "path", "name": "client_id", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "204": { "description": "Client deleted" },
+          "404": { "description": "Client not found" }
+        }
+      }
+    }
+    // ... other endpoints for matters, documents, billing, etc.
+  },
+  "components": {
+    "schemas": {
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "readOnly": true },
+          "name": { "type": "string" },
+          "contact_information": { "type": "string" }
+          // ... other client properties
+        },
+        "required": ["name", "contact_information"]
+      }
+      // ... other schemas for Matters, Documents, Invoices, etc.
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ]
+}
+```
